@@ -179,7 +179,88 @@
                 explanation.textContent = 'GeometryReader lấy kích thước của container cha trực tiếp (Child), không phải toàn bộ màn hình (Parent). Đây là điểm quan trọng khi làm nested layouts!';
             }
         }
-        
+
+        // Load GeometryReader Demo
+        function loadGeometryReaderDemo() {
+            const container = document.getElementById('geometryReaderContent');
+            container.innerHTML = `
+                <div class="space-y-6">
+                    <!-- Demo Controls -->
+                    <div class="border-b pb-4">
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Chọn ví dụ:</label>
+                        <div class="flex flex-wrap gap-2">
+                            <button onclick="selectGeometryDemo('basic', event)" class="geometry-demo-btn px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition">
+                                Cơ bản
+                            </button>
+                            <button onclick="selectGeometryDemo('center', event)" class="geometry-demo-btn px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition">
+                                Căn giữa
+                            </button>
+                            <button onclick="selectGeometryDemo('ratio', event)" class="geometry-demo-btn px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition">
+                                Tỷ lệ
+                            </button>
+                            <button onclick="selectGeometryDemo('nested', event)" class="geometry-demo-btn px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition">
+                                Nested
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Size Controls -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">
+                                Width: <span id="widthValue">400</span>px
+                            </label>
+                            <input type="range" id="widthSlider" min="200" max="600" value="400"
+                                   class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">
+                                Height: <span id="heightValue">300</span>px
+                            </label>
+                            <input type="range" id="heightSlider" min="150" max="500" value="300"
+                                   class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                        </div>
+                    </div>
+
+                    <!-- Demo Container -->
+                    <div class="border-2 border-gray-300 rounded-lg p-4 bg-gray-50">
+                        <div id="geometryDemoContainer" style="width: 400px; height: 300px; margin: 0 auto;">
+                            <!-- Demo will be rendered here -->
+                        </div>
+                    </div>
+
+                    <!-- Code Example -->
+                    <div class="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto">
+                        <pre id="geometryCode" class="text-sm"><code>// Code will appear here</code></pre>
+                    </div>
+
+                    <!-- Explanation -->
+                    <div class="bg-blue-50 border-l-4 border-blue-500 p-4">
+                        <p id="geometryExplanation" class="text-gray-700"></p>
+                    </div>
+                </div>
+            `;
+
+            // Initialize sliders
+            const widthSlider = document.getElementById('widthSlider');
+            const heightSlider = document.getElementById('heightSlider');
+            const widthValue = document.getElementById('widthValue');
+            const heightValue = document.getElementById('heightValue');
+
+            widthSlider.addEventListener('input', (e) => {
+                widthValue.textContent = e.target.value;
+                updateGeometryDemo();
+            });
+
+            heightSlider.addEventListener('input', (e) => {
+                heightValue.textContent = e.target.value;
+                updateGeometryDemo();
+            });
+
+            // Load initial demo
+            selectGeometryDemo('basic');
+        }
+
         // Initialize on page load
         loadGeometryReaderDemo();
     </script>
