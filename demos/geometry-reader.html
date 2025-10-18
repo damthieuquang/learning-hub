@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GeometryReader Demo - iOS Swift Learning Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-out;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
+    <header class="bg-white shadow-md sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg flex items-center justify-center">
+                        <i data-lucide="book-open" class="text-white w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-bold text-gray-800">GeometryReader Demo</h1>
+                        <p class="text-sm text-gray-500">SwiftUI Layout</p>
+                    </div>
+                </div>
+                <a href="../index.html" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition">
+                    <i data-lucide="home" class="inline w-4 h-4 mr-2"></i>
+                    Trang chủ
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 py-8">
+        <div class="bg-white rounded-xl shadow-lg p-8 mb-6 fade-in">
+            <h2 class="text-3xl font-bold text-gray-800 mb-2">GeometryReader Demo</h2>
+            <p class="text-gray-600 mb-6">Khám phá cách GeometryReader hoạt động qua các ví dụ tương tác</p>
+            <div id="geometryReaderContent"></div>
+        </div>
+    </main>
+
+    <footer class="bg-white mt-12 py-6 border-t">
+        <div class="container mx-auto px-4 text-center text-gray-600">
+            <p>Made with ❤️ for iOS Developers | © 2025</p>
+        </div>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+        
+        let currentGeometryDemo = 'basic';
+
+        function selectGeometryDemo(demo, clickEvent = null) {
+            currentGeometryDemo = demo;
+            
+            // Update button styles
+            document.querySelectorAll('.geometry-demo-btn').forEach(btn => {
+                btn.classList.remove('bg-blue-500', 'text-white');
+                btn.classList.add('bg-gray-200', 'text-gray-700');
+            });
+            if (clickEvent && clickEvent.target) {
+                clickEvent.target.classList.remove('bg-gray-200', 'text-gray-700');
+                clickEvent.target.classList.add('bg-blue-500', 'text-white');
+            }
+
+            updateGeometryDemo();
+        }
+
+        function updateGeometryDemo() {
+            const width = parseInt(document.getElementById('widthSlider').value);
+            const height = parseInt(document.getElementById('heightSlider').value);
+            const container = document.getElementById('geometryDemoContainer');
+            const codeBlock = document.getElementById('geometryCode');
+            const explanation = document.getElementById('geometryExplanation');
+
+            container.style.width = width + 'px';
+            container.style.height = height + 'px';
+
+            if (currentGeometryDemo === 'basic') {
+                container.innerHTML = `
+                    <div class="w-full h-full bg-blue-50 flex items-center justify-center border-2 border-blue-300 rounded-lg">
+                        <div class="text-center">
+                            <div class="text-2xl font-bold text-blue-600">Width: ${width}px</div>
+                            <div class="text-2xl font-bold text-blue-600">Height: ${height}px</div>
+                        </div>
+                    </div>
+                `;
+                codeBlock.textContent = `GeometryReader { geometry in
+    VStack {
+        Text("Width: \\(geometry.size.width)")
+        Text("Height: \\(geometry.size.height)")
+    }
+}`;
+                explanation.textContent = 'GeometryReader đọc kích thước của container và hiển thị thông tin. Thử thay đổi width/height để thấy giá trị cập nhật!';
+            } else if (currentGeometryDemo === 'center') {
+                const circleSize = 100;
+                container.innerHTML = `
+                    <div class="w-full h-full bg-green-50 relative border-2 border-green-300 rounded-lg">
+                        <div class="absolute w-24 h-24 bg-green-500 rounded-full flex items-center justify-center text-white font-semibold"
+                             style="left: ${width/2 - circleSize/2}px; top: ${height/2 - circleSize/2}px;">
+                            CENTER
+                        </div>
+                        <div class="absolute top-2 left-2 text-xs text-green-700">
+                            x: ${width/2}px, y: ${height/2}px
+                        </div>
+                    </div>
+                `;
+                codeBlock.textContent = `GeometryReader { geometry in
+    Circle()
+        .fill(Color.green)
+        .frame(width: 100, height: 100)
+        .position(
+            x: geometry.size.width / 2,
+            y: geometry.size.height / 2
+        )
+}`;
+                explanation.textContent = 'Sử dụng geometry.size để tính toán vị trí chính giữa của view. Circle luôn ở tâm dù container thay đổi kích thước.';
+            } else if (currentGeometryDemo === 'ratio') {
+                const topHeight = height * 0.3;
+                const bottomHeight = height * 0.7;
+                container.innerHTML = `
+                    <div class="w-full h-full flex flex-col border-2 border-gray-300 rounded-lg overflow-hidden">
+                        <div class="bg-blue-400 flex items-center justify-center text-white font-semibold"
+                             style="height: ${topHeight}px;">
+                            30% (${Math.round(topHeight)}px)
+                        </div>
+                        <div class="bg-red-400 flex items-center justify-center text-white font-semibold"
+                             style="height: ${bottomHeight}px;">
+                            70% (${Math.round(bottomHeight)}px)
+                        </div>
+                    </div>
+                `;
+                codeBlock.textContent = `GeometryReader { geometry in
+    VStack(spacing: 0) {
+        Rectangle()
+            .fill(Color.blue)
+            .frame(height: geometry.size.height * 0.3)
+        
+        Rectangle()
+            .fill(Color.red)
+            .frame(height: geometry.size.height * 0.7)
+    }
+}`;
+                explanation.textContent = 'Tạo layout responsive với tỷ lệ phần trăm. Dù kích thước thay đổi, tỷ lệ 30/70 luôn được giữ.';
+            } else if (currentGeometryDemo === 'nested') {
+                container.innerHTML = `
+                    <div class="w-full h-full bg-purple-100 border-4 border-purple-500 rounded-lg p-2 relative">
+                        <div class="absolute top-1 left-1 text-xs font-mono text-purple-700">Parent (${width}×${height})</div>
+                        <div class="w-3/4 h-3/4 bg-purple-200 border-2 border-purple-600 rounded mx-auto mt-6 p-2 relative">
+                            <div class="absolute top-1 left-1 text-xs font-mono text-purple-700">Child (${Math.round(width*0.75)}×${Math.round(height*0.75)})</div>
+                            <div class="w-full h-full bg-purple-300 border-2 border-purple-700 rounded flex items-center justify-center">
+                                <div class="text-center text-purple-900">
+                                    <div class="font-bold">GeometryReader</div>
+                                    <div class="text-sm">Lấy kích thước Child</div>
+                                    <div class="text-xs mt-1">(${Math.round(width*0.75)}×${Math.round(height*0.75)})</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                codeBlock.textContent = `VStack {
+    // Parent container
+    VStack {
+        // Child container (75% of parent)
+        GeometryReader { geometry in
+            // Lấy kích thước của Child, không phải Parent
+            Text("\\(geometry.size.width) × \\(geometry.size.height)")
+        }
+        .frame(width: .infinity, height: .infinity)
+    }
+    .frame(width: parent.width * 0.75, height: parent.height * 0.75)
+}`;
+                explanation.textContent = 'GeometryReader lấy kích thước của container cha trực tiếp (Child), không phải toàn bộ màn hình (Parent). Đây là điểm quan trọng khi làm nested layouts!';
+            }
+        }
+        
+        // Initialize on page load
+        loadGeometryReaderDemo();
+    </script>
+</body>
+</html>

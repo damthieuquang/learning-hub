@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iOS Swift Learning Hub - Demo Tương Tác</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-out;
+        }
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
+    <!-- Header -->
+    <header class="bg-white shadow-md sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg flex items-center justify-center">
+                        <i data-lucide="book-open" class="text-white w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-bold text-gray-800">iOS Swift Learning Hub</h1>
+                        <p class="text-sm text-gray-500">Demo Tương Tác & Kiến Thức Thực Chiến</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8">
+        <div class="text-center mb-12 fade-in">
+            <h2 class="text-4xl font-bold text-gray-800 mb-4">Chào mừng đến với Learning Hub</h2>
+            <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                Tổng hợp các demo tương tác về các vấn đề kỹ thuật iOS/Swift mà tôi gặp phải trong công việc.
+                Học qua hình ảnh và thực hành!
+            </p>
+        </div>
+
+        <!-- Categories -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+            <!-- Category: SwiftUI -->
+            <div class="bg-white rounded-xl shadow-lg p-6 card-hover">
+                <div class="w-16 h-16 bg-gradient-to-br from-blue-400 to-blue-600 rounded-lg flex items-center justify-center mb-4">
+                    <i data-lucide="layout" class="text-white w-8 h-8"></i>
+                </div>
+                <h3 class="text-xl font-bold text-gray-800 mb-2">SwiftUI</h3>
+                <p class="text-gray-600 mb-4">Các khái niệm và kỹ thuật về SwiftUI</p>
+                <div class="space-y-2">
+                    <a href="demos/geometry-reader.html" class="block px-4 py-2 bg-blue-50 hover:bg-blue-100 rounded-lg transition">
+                        <div class="flex items-center justify-between">
+                            <span class="text-blue-700 font-medium">GeometryReader Demo</span>
+                            <i data-lucide="arrow-right" class="w-4 h-4 text-blue-500"></i>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Category: Concurrency -->
+            <div class="bg-white rounded-xl shadow-lg p-6 card-hover">
+                <div class="w-16 h-16 bg-gradient-to-br from-purple-400 to-purple-600 rounded-lg flex items-center justify-center mb-4">
+                    <i data-lucide="zap" class="text-white w-8 h-8"></i>
+                </div>
+                <h3 class="text-xl font-bold text-gray-800 mb-2">Concurrency & GCD</h3>
+                <p class="text-gray-600 mb-4">Queue, threading và xử lý bất đồng bộ</p>
+                <div class="space-y-2">
+                    <a href="demos/queue.html" class="block px-4 py-2 bg-purple-50 hover:bg-purple-100 rounded-lg transition">
+                        <div class="flex items-center justify-between">
+                            <span class="text-purple-700 font-medium">Queue Demo</span>
+                            <i data-lucide="arrow-right" class="w-4 h-4 text-purple-500"></i>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Coming Soon -->
+            <div class="bg-gray-100 rounded-xl shadow-lg p-6 opacity-60">
+                <div class="w-16 h-16 bg-gray-300 rounded-lg flex items-center justify-center mb-4">
+                    <i data-lucide="plus" class="text-gray-500 w-8 h-8"></i>
+                </div>
+                <h3 class="text-xl font-bold text-gray-600 mb-2">Coming Soon</h3>
+                <p class="text-gray-500 mb-4">Thêm nhiều chủ đề khác...</p>
+                <div class="flex items-center text-gray-400">
+                    <span class="text-sm font-semibold">Đang phát triển</span>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white mt-12 py-6 border-t">
+        <div class="container mx-auto px-4 text-center text-gray-600">
+            <p>Made with ❤️ for iOS Developers | © 2025</p>
+        </div>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>
