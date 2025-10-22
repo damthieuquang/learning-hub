@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real World Stack View Demo</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 40px;
+            font-size: 28px;
+        }
+        
+        .demo-section {
+            margin-bottom: 40px;
+            padding: 25px;
+            border-radius: 15px;
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+        }
+        
+        .demo-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #495057;
+            text-align: center;
+        }
+        
+        .stack-view {
+            display: flex;
+            border: 3px dashed #6c757d;
+            margin: 20px 0;
+            padding: 10px;
+            border-radius: 10px;
+            background: white;
+            min-height: 60px;
+            align-items: center;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .stack-label {
+            position: absolute;
+            top: -15px;
+            left: 10px;
+            background: white;
+            padding: 2px 8px;
+            font-size: 12px;
+            font-weight: bold;
+            color: #6c757d;
+        }
+        
+        .button-element {
+            padding: 12px 20px;
+            margin: 2px;
+            border-radius: 8px;
+            font-weight: bold;
+            text-align: center;
+            background: linear-gradient(45deg, #4CAF50, #66BB6A);
+            border: 2px solid #43A047;
+            color: white;
+            transition: all 0.3s ease;
+            position: relative;
+            white-space: nowrap;
+        }
+        
+        .spacer-20 {
+            background: linear-gradient(45deg, #FFC107, #FFD54F);
+            border: 2px solid #FF8F00;
+            color: #333;
+            font-weight: bold;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            position: relative;
+            font-size: 12px;
+        }
+        
+        .trailing-spacer {
+            background: linear-gradient(45deg, #E91E63, #F06292);
+            border: 2px solid #C2185B;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            position: relative;
+            font-size: 12px;
+        }
+        
+        .priority-indicator {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #FF5722;
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 9px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            z-index: 10;
+        }
+        
+        .controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .control-group {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid #dee2e6;
+        }
+        
+        .control-label {
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #495057;
+            font-size: 14px;
+        }
+        
+        .slider {
+            width: 100%;
+            height: 4px;
+            border-radius: 2px;
+            background: #ddd;
+            outline: none;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        }
+        
+        .slider:hover {
+            opacity: 1;
+        }
+        
+        .slider::-webkit-slider-thumb {
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #667eea;
+            cursor: pointer;
+        }
+        
+        .slider::-moz-range-thumb {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #667eea;
+            cursor: pointer;
+            border: none;
+        }
+        
+        .value-display {
+            text-align: center;
+            margin-top: 5px;
+            font-weight: bold;
+            color: #667eea;
+            font-size: 12px;
+        }
+        
+        .container-width-slider {
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .explanation {
+            background: #e8f5e8;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border-left: 4px solid #4CAF50;
+            font-size: 14px;
+        }
+        
+        .wrong-config {
+            background: #ffebee;
+            border-left-color: #f44336;
+        }
+        
+        .result-info {
+            text-align: center;
+            margin: 15px 0;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .warning {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+        
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .code-example {
+            background: #f1f3f4;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 13px;
+            margin: 15px 0;
+            border: 1px solid #dadce0;
+            overflow-x: auto;
+        }
+        
+        .preset-buttons {
+            display: flex;
+            gap: 10px;
+            margin: 15px 0;
+            flex-wrap: wrap;
+        }
+        
+        .preset-btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 12px;
+            transition: all 0.2s ease;
+        }
+        
+        .preset-correct {
+            background: #4CAF50;
+            color: white;
+        }
+        
+        .preset-wrong {
+            background: #f44336;
+            color: white;
+        }
+        
+        .preset-btn:hover {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎯 Bài Toán Thực Tế: Stack View với 2 Button</h1>
+        
+        <!-- Problem Description -->
+        <div class="demo-section">
+            <div class="demo-title">📋 Mô tả bài toán của bạn</div>
+            <div class="explanation">
+                <strong>Cấu trúc:</strong> [Button 1] → [Spacer 20px] → [Button 2] → [Trailing Spacer]<br>
+                <strong>Mục tiêu:</strong> Spacing 20px giữa 2 button, tất cả dồn về bên trái<br>
+                <strong>Vấn đề:</strong> Cần thiết lập priority đúng để đạt được kết quả mong muốn
+            </div>
+            
+            <div class="preset-buttons">
+                <button class="preset-btn preset-correct" onclick="setCorrectConfig()">✅ Cấu hình ĐÚNG</button>
+                <button class="preset-btn preset-wrong" onclick="setWrongConfig1()">❌ Sai: All High Priority</button>
+                <button class="preset-btn preset-wrong" onclick="setWrongConfig2()">❌ Sai: All Low Priority</button>
+                <button class="preset-btn preset-wrong" onclick="setWrongConfig3()">❌ Sai: Button Low Priority</button>
+            </div>
+        </div>
+        
+        <!-- Demo -->
+        <div class="demo-section">
+            <div class="demo-title">🧪 Thử nghiệm trực tiếp</div>
+            
+            <div class="container-width-slider">
+                <label><strong>🔧 Độ rộng Stack View:</strong></label>
+                <input type="range" id="containerWidth" class="slider" min="300" max="800" value="600">
+                <div class="value-display" id="containerWidthValue">600px</div>
+            </div>
+            
+            <div class="stack-view" id="stackView">
+                <div class="stack-label">UIStackView (Horizontal)</div>
+                
+                <div class="button-element" id="button1">
+                    <div class="priority-indicator" id="priority1">750</div>
+                    Button 1
+                </div>
+                
+                <div class="spacer-20" id="spacer20">
+                    <div class="priority-indicator" id="priority2">750</div>
+                    20px
+                </div>
+                
+                <div class="button-element" id="button2">
+                    <div class="priority-indicator" id="priority3">750</div>
+                    Button 2
+                </div>
+                
+                <div class="trailing-spacer" id="trailingSpacer">
+                    <div class="priority-indicator" id="priority4">1</div>
+                    Trailing Spacer
+                </div>
+            </div>
+            
+            <div class="result-info" id="resultInfo">Kết quả sẽ hiển thị ở đây</div>
+            
+            <div class="controls">
+                <div class="control-group">
+                    <div class="control-label">🟢 Button 1 - Hugging Priority</div>
+                    <input type="range" id="hugging1" class="slider" min="1" max="1000" value="750">
+                    <div class="value-display" id="hugging1Value">750</div>
+                </div>
+                
+                <div class="control-group">
+                    <div class="control-label">🟡 Spacer 20px - Hugging Priority</div>
+                    <input type="range" id="hugging2" class="slider" min="1" max="1000" value="750">
+                    <div class="value-display" id="hugging2Value">750</div>
+                </div>
+                
+                <div class="control-group">
+                    <div class="control-label">🟢 Button 2 - Hugging Priority</div>
+                    <input type="range" id="hugging3" class="slider" min="1" max="1000" value="750">
+                    <div class="value-display" id="hugging3Value">750</div>
+                </div>
+                
+                <div class="control-group">
+                    <div class="control-label">🔴 Trailing Spacer - Hugging Priority</div>
+                    <input type="range" id="hugging4" class="slider" min="1" max="1000" value="1">
+                    <div class="value-display" id="hugging4Value">1</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Code Example -->
+        <div class="demo-section">
+            <div class="demo-title">💻 Code Implementation (Swift)</div>
+            <div class="code-example" id="codeExample">
+// Tạo stack view
+let stackView = UIStackView()
+stackView.axis = .horizontal
+stackView.distribution = .fill
+
+// Tạo các element
+let button1 = UIButton()
+let spacerView = UIView()
+let button2 = UIButton()
+let trailingSpacerView = UIView()
+
+// Thiết lập priority ĐÚNG
+button1.setContentHuggingPriority(.defaultHigh, for: .horizontal)        // 750
+spacerView.setContentHuggingPriority(.defaultHigh, for: .horizontal)     // 750
+button2.setContentHuggingPriority(.defaultHigh, for: .horizontal)        // 750
+trailingSpacerView.setContentHuggingPriority(.defaultLow, for: .horizontal) // 1
+
+// Thiết lập width constraint cho spacer 20px
+spacerView.widthAnchor.constraint(equalToConstant: 20).isActive = true
+
+// Add vào stack view
+stackView.addArrangedSubview(button1)
+stackView.addArrangedSubview(spacerView)
+stackView.addArrangedSubview(button2)
+stackView.addArrangedSubview(trailingSpacerView)
+            </div>
+        </div>
+        
+        <!-- Explanation -->
+        <div class="demo-section">
+            <div class="demo-title">🎓 Giải thích chi tiết</div>
+            
+            <div class="explanation">
+                <strong>🎯 Mục tiêu của từng element:</strong><br>
+                • <strong>Button 1 & 2:</strong> Giữ kích thước tự nhiên (không kéo giãn) → Priority CAO<br>
+                • <strong>Spacer 20px:</strong> Giữ đúng 20px (không kéo giãn) → Priority CAO<br>
+                • <strong>Trailing Spacer:</strong> Kéo giãn để đẩy tất cả sang trái → Priority THẤP
+            </div>
+            
+            <div class="explanation">
+                <strong>⚡ Content Hugging Priority hoạt động như thế nào:</strong><br>
+                • Khi stack view có thêm không gian → element nào có priority THẤP nhất sẽ kéo giãn<br>
+                • Trailing spacer có priority = 1 (thấp nhất) → nó sẽ "ăn" hết không gian thừa<br>
+                • Các element khác giữ nguyên kích thước → tạo hiệu ứng "dồn về trái"
+            </div>
+            
+            <div class="explanation wrong-config">
+                <strong>❌ Các cấu hình SAI thường gặp:</strong><br>
+                • <strong>Tất cả priority cao:</strong> Không có element nào kéo giãn → không dồn được về trái<br>
+                • <strong>Tất cả priority thấp:</strong> Tất cả đều kéo giãn → button và spacer bị biến dạng<br>
+                • <strong>Button priority thấp:</strong> Button bị kéo giãn → mất tính thẩm mỹ
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Update display values
+        function updateValue(sliderId, displayId) {
+            const slider = document.getElementById(sliderId);
+            const display = document.getElementById(displayId);
+            display.textContent = slider.value + (sliderId.includes('Width') ? 'px' : '');
+        }
+
+        function updateDemo() {
+            const containerWidth = parseInt(document.getElementById('containerWidth').value);
+            const stackView = document.getElementById('stackView');
+            
+            const button1 = document.getElementById('button1');
+            const spacer20 = document.getElementById('spacer20');
+            const button2 = document.getElementById('button2');
+            const trailingSpacer = document.getElementById('trailingSpacer');
+            
+            const priority1 = parseInt(document.getElementById('hugging1').value);
+            const priority2 = parseInt(document.getElementById('hugging2').value);
+            const priority3 = parseInt(document.getElementById('hugging3').value);
+            const priority4 = parseInt(document.getElementById('hugging4').value);
+            
+            // Update container width
+            stackView.style.width = containerWidth + 'px';
+            
+            // Update priority indicators
+            document.getElementById('priority1').textContent = priority1;
+            document.getElementById('priority2').textContent = priority2;
+            document.getElementById('priority3').textContent = priority3;
+            document.getElementById('priority4').textContent = priority4;
+            
+            // Calculate flex properties based on priorities
+            const minPriority = Math.min(priority1, priority2, priority3, priority4);
+            
+            // Calculate flex-grow (inverse of priority)
+            const calculateFlexGrow = (priority) => {
+                if (priority === minPriority) {
+                    return 10; // Element with lowest priority grows most
+                } else {
+                    return priority > minPriority * 2 ? 0 : 1;
+                }
+            };
+            
+            button1.style.flexGrow = calculateFlexGrow(priority1);
+            spacer20.style.flexGrow = calculateFlexGrow(priority2);
+            button2.style.flexGrow = calculateFlexGrow(priority3);
+            trailingSpacer.style.flexGrow = calculateFlexGrow(priority4);
+            
+            // Set base widths
+            button1.style.flexBasis = '80px';
+            spacer20.style.flexBasis = '20px';
+            button2.style.flexBasis = '80px';
+            trailingSpacer.style.flexBasis = '10px';
+            
+            // Evaluate configuration and show result
+            evaluateConfiguration(priority1, priority2, priority3, priority4);
+        }
+        
+        function evaluateConfiguration(p1, p2, p3, p4) {
+            const resultInfo = document.getElementById('resultInfo');
+            
+            // Perfect configuration: Buttons and spacer high, trailing spacer low
+            if (p1 >= 500 && p2 >= 500 && p3 >= 500 && p4 <= 100) {
+                resultInfo.textContent = "✅ HOÀN HẢO! Buttons giữ kích thước, trailing spacer kéo giãn, tất cả dồn về trái";
+                resultInfo.className = "result-info success";
+            }
+            // All high priority
+            else if (p1 >= 500 && p2 >= 500 && p3 >= 500 && p4 >= 500) {
+                resultInfo.textContent = "❌ SAI: Tất cả priority cao, không có element nào kéo giãn được";
+                resultInfo.className = "result-info error";
+            }
+            // All low priority
+            else if (p1 <= 100 && p2 <= 100 && p3 <= 100 && p4 <= 100) {
+                resultInfo.textContent = "❌ SAI: Tất cả priority thấp, buttons và spacer bị kéo giãn";
+                resultInfo.className = "result-info error";
+            }
+            // Buttons low priority
+            else if ((p1 <= 100 || p3 <= 100) && p2 >= 500) {
+                resultInfo.textContent = "❌ SAI: Button có priority thấp, bị kéo giãn mất hình dạng";
+                resultInfo.className = "result-info error";
+            }
+            // Spacer low priority
+            else if (p2 <= 100 && p1 >= 500 && p3 >= 500) {
+                resultInfo.textContent = "⚠️ CẨN THẬN: Spacer có priority thấp, khoảng cách có thể thay đổi";
+                resultInfo.className = "result-info warning";
+            }
+            // Other configurations
+            else {
+                resultInfo.textContent = "⚠️ Cấu hình chưa tối ưu, hãy thử các preset để thấy sự khác biệt";
+                resultInfo.className = "result-info warning";
+            }
+        }
+        
+        // Preset configurations
+        function setCorrectConfig() {
+            document.getElementById('hugging1').value = 750;
+            document.getElementById('hugging2').value = 750;
+            document.getElementById('hugging3').value = 750;
+            document.getElementById('hugging4').value = 1;
+            updateAllValues();
+            updateDemo();
+        }
+        
+        function setWrongConfig1() { // All high
+            document.getElementById('hugging1').value = 750;
+            document.getElementById('hugging2').value = 750;
+            document.getElementById('hugging3').value = 750;
+            document.getElementById('hugging4').value = 750;
+            updateAllValues();
+            updateDemo();
+        }
+        
+        function setWrongConfig2() { // All low
+            document.getElementById('hugging1').value = 50;
+            document.getElementById('hugging2').value = 50;
+            document.getElementById('hugging3').value = 50;
+            document.getElementById('hugging4').value = 50;
+            updateAllValues();
+            updateDemo();
+        }
+        
+        function setWrongConfig3() { // Button low
+            document.getElementById('hugging1').value = 50;
+            document.getElementById('hugging2').value = 750;
+            document.getElementById('hugging3').value = 50;
+            document.getElementById('hugging4').value = 750;
+            updateAllValues();
+            updateDemo();
+        }
+        
+        function updateAllValues() {
+            updateValue('containerWidth', 'containerWidthValue');
+            updateValue('hugging1', 'hugging1Value');
+            updateValue('hugging2', 'hugging2Value');
+            updateValue('hugging3', 'hugging3Value');
+            updateValue('hugging4', 'hugging4Value');
+        }
+
+        // Event listeners
+        document.getElementById('containerWidth').addEventListener('input', function() {
+            updateValue('containerWidth', 'containerWidthValue');
+            updateDemo();
+        });
+
+        ['hugging1', 'hugging2', 'hugging3', 'hugging4'].forEach(id => {
+            document.getElementById(id).addEventListener('input', function() {
+                updateValue(id, id + 'Value');
+                updateDemo();
+            });
+        });
+
+        // Initialize
+        updateDemo();
+    </script>
+</body>
+</html>
