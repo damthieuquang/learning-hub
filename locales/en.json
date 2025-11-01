@@ -1,0 +1,35 @@
+{
+  "common": {
+    "homeTitle": "iOS Swift Learning Hub",
+    "homeSubtitle": "Interactive Demos & Real-World Techniques",
+    "madeWith": "Made with ❤️ for iOS Developers | © 2025",
+    "visitorCount": "Visits:",
+    "home": "Home"
+  },
+  "index": {
+    "title": "iOS Swift Learning Hub - Interactive Demo",
+    "welcome": "Welcome to Learning Hub",
+    "description": "A collection of interactive demos about iOS/Swift technical issues I've encountered in real work. Learn through visualization and practice!",
+    "swiftui": {
+      "title": "SwiftUI",
+      "description": "SwiftUI concepts and techniques",
+      "geometryReader": "GeometryReader Demo"
+    },
+    "concurrency": {
+      "title": "Concurrency & GCD",
+      "description": "Queue, threading and async handling",
+      "queue": "Queue Demo"
+    },
+    "autoLayout": {
+      "title": "Auto Layout",
+      "description": "Priority, constraints and layout dynamics",
+      "priority": "Auto Layout Priority Demo",
+      "realWorld": "Real World Stack Demo"
+    },
+    "comingSoon": {
+      "title": "Coming Soon",
+      "description": "More topics coming...",
+      "status": "In development"
+    }
+  }
+}

@@ -3,9 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GeometryReader Demo - iOS Swift Learning Hub</title>
+    <title data-i18n="geometry.title">GeometryReader Demo - iOS Swift Learning Hub</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- i18next scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/i18next@23.7.6/dist/umd/i18next.min.js"></script>
     <style>
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
@@ -25,38 +27,77 @@
                         <i data-lucide="book-open" class="text-white w-6 h-6"></i>
                     </div>
                     <div>
-                        <h1 class="text-2xl font-bold text-gray-800">GeometryReader Demo</h1>
-                        <p class="text-sm text-gray-500">SwiftUI Layout</p>
+                        <h1 class="text-2xl font-bold text-gray-800" data-i18n="geometry.title">GeometryReader Demo</h1>
+                        <p class="text-sm text-gray-500" data-i18n="geometry.subtitle">SwiftUI Layout</p>
                     </div>
                 </div>
-                <a href="../index.html" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition">
-                    <i data-lucide="home" class="inline w-4 h-4 mr-2"></i>
-                    Trang chủ
-                </a>
+                <div class="flex items-center gap-4">
+                    <!-- Language Switcher -->
+                    <div class="flex items-center gap-2">
+                        <button onclick="changeLanguage('vi')" id="lang-vi" class="px-3 py-1 rounded-lg font-medium transition" style="background-color: #3b82f6; color: white;">VI</button>
+                        <button onclick="changeLanguage('en')" id="lang-en" class="px-3 py-1 rounded-lg font-medium transition hover:bg-gray-200;" style="color: #6b7280;">EN</button>
+                    </div>
+                    <a href="../index.html" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition">
+                        <i data-lucide="home" class="inline w-4 h-4 mr-2"></i>
+                        <span data-i18n="common.home">Trang chủ</span>
+                    </a>
+                </div>
             </div>
         </div>
     </header>
 
     <main class="container mx-auto px-4 py-8">
         <div class="bg-white rounded-xl shadow-lg p-8 mb-6 fade-in">
-            <h2 class="text-3xl font-bold text-gray-800 mb-2">GeometryReader Demo</h2>
-            <p class="text-gray-600 mb-6">Khám phá cách GeometryReader hoạt động qua các ví dụ tương tác</p>
+            <h2 class="text-3xl font-bold text-gray-800 mb-2" data-i18n="geometry.title">GeometryReader Demo</h2>
+            <p class="text-gray-600 mb-6" data-i18n="geometry.description">Khám phá cách GeometryReader hoạt động qua các ví dụ tương tác</p>
             <div id="geometryReaderContent"></div>
         </div>
     </main>
 
     <footer class="bg-white mt-12 py-6 border-t">
         <div class="container mx-auto px-4 text-center text-gray-600">
-            <p>Made with ❤️ for iOS Developers | © 2025</p>
+            <p data-i18n="common.madeWith">Made with ❤️ for iOS Developers | © 2025</p>
             <div class="mt-3 flex items-center justify-center gap-2 text-sm">
                 <i data-lucide="eye" class="w-4 h-4"></i>
-                <span>Lượt ghé thăm: <strong id="visitor-count">...</strong></span>
+                <span><span data-i18n="common.visitorCount">Lượt ghé thăm:</span> <strong id="visitor-count">...</strong></span>
             </div>
         </div>
     </footer>
 
+    <!-- i18next initialization (inline version) -->
+    <script src="../assets/js/i18n-init-inline.js"></script>
+
     <script>
-        lucide.createIcons();
+        // Set page attribute for title translation
+        document.body.setAttribute('data-page', 'geometry');
+
+        // Initialize Lucide icons after i18next is ready
+        window.addEventListener('languageChanged', function() {
+            lucide.createIcons();
+        });
+
+        // Language switcher styling
+        function updateLanguageSwitcherUI() {
+            const viBtn = document.getElementById('lang-vi');
+            const enBtn = document.getElementById('lang-en');
+            const currentLang = i18next.language || localStorage.getItem('i18nextLng') || 'vi';
+
+            viBtn.style.backgroundColor = '#d1d5db';
+            viBtn.style.color = '#374151';
+            enBtn.style.backgroundColor = 'transparent';
+            enBtn.style.color = '#6b7280';
+
+            if (currentLang === 'vi') {
+                viBtn.style.backgroundColor = '#3b82f6';
+                viBtn.style.color = 'white';
+            } else if (currentLang === 'en') {
+                enBtn.style.backgroundColor = '#e5e7eb';
+                enBtn.style.color = '#374151';
+            }
+        }
+
+        window.addEventListener('languageChanged', updateLanguageSwitcherUI);
+        setTimeout(updateLanguageSwitcherUI, 500);
 
         // Visitor counter using CountAPI
         const counterNamespace = 'ios-learning-hub';
@@ -65,7 +106,9 @@
         fetch(`https://api.countapi.xyz/hit/${counterNamespace}/${counterKey}`)
             .then(response => response.json())
             .then(data => {
-                document.getElementById('visitor-count').textContent = data.value.toLocaleString('vi-VN');
+                const currentLang = i18next.language || 'vi';
+                const locale = currentLang === 'en' ? 'en-US' : 'vi-VN';
+                document.getElementById('visitor-count').textContent = data.value.toLocaleString(locale);
             })
             .catch(error => {
                 console.error('Error fetching visitor count:', error);
@@ -115,7 +158,7 @@
         Text("Height: \\(geometry.size.height)")
     }
 }`;
-                explanation.textContent = 'GeometryReader đọc kích thước của container và hiển thị thông tin. Thử thay đổi width/height để thấy giá trị cập nhật!';
+                explanation.textContent = i18next.t('geometry.explanations.basic');
             } else if (currentGeometryDemo === 'center') {
                 const circleSize = 100;
                 container.innerHTML = `
@@ -138,7 +181,7 @@
             y: geometry.size.height / 2
         )
 }`;
-                explanation.textContent = 'Sử dụng geometry.size để tính toán vị trí chính giữa của view. Circle luôn ở tâm dù container thay đổi kích thước.';
+                explanation.textContent = i18next.t('geometry.explanations.center');
             } else if (currentGeometryDemo === 'ratio') {
                 const topHeight = height * 0.3;
                 const bottomHeight = height * 0.7;
@@ -159,13 +202,13 @@
         Rectangle()
             .fill(Color.blue)
             .frame(height: geometry.size.height * 0.3)
-        
+
         Rectangle()
             .fill(Color.red)
             .frame(height: geometry.size.height * 0.7)
     }
 }`;
-                explanation.textContent = 'Tạo layout responsive với tỷ lệ phần trăm. Dù kích thước thay đổi, tỷ lệ 30/70 luôn được giữ.';
+                explanation.textContent = i18next.t('geometry.explanations.ratio');
             } else if (currentGeometryDemo === 'nested') {
                 container.innerHTML = `
                     <div class="w-full h-full bg-purple-100 border-4 border-purple-500 rounded-lg p-2 relative">
@@ -194,7 +237,7 @@
     }
     .frame(width: parent.width * 0.75, height: parent.height * 0.75)
 }`;
-                explanation.textContent = 'GeometryReader lấy kích thước của container cha trực tiếp (Child), không phải toàn bộ màn hình (Parent). Đây là điểm quan trọng khi làm nested layouts!';
+                explanation.textContent = i18next.t('geometry.explanations.nested');
             }
         }
 
@@ -205,19 +248,19 @@
                 <div class="space-y-6">
                     <!-- Demo Controls -->
                     <div class="border-b pb-4">
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">Chọn ví dụ:</label>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">${i18next.t('geometry.selectExample')}</label>
                         <div class="flex flex-wrap gap-2">
                             <button onclick="selectGeometryDemo('basic', event)" class="geometry-demo-btn px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition">
-                                Cơ bản
+                                ${i18next.t('geometry.basic')}
                             </button>
                             <button onclick="selectGeometryDemo('center', event)" class="geometry-demo-btn px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition">
-                                Căn giữa
+                                ${i18next.t('geometry.center')}
                             </button>
                             <button onclick="selectGeometryDemo('ratio', event)" class="geometry-demo-btn px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition">
-                                Tỷ lệ
+                                ${i18next.t('geometry.ratio')}
                             </button>
                             <button onclick="selectGeometryDemo('nested', event)" class="geometry-demo-btn px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition">
-                                Nested
+                                ${i18next.t('geometry.nested')}
                             </button>
                         </div>
                     </div>
@@ -226,14 +269,14 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label class="block text-sm font-semibold text-gray-700 mb-2">
-                                Width: <span id="widthValue">400</span>px
+                                ${i18next.t('geometry.widthLabel')} <span id="widthValue">400</span>px
                             </label>
                             <input type="range" id="widthSlider" min="200" max="600" value="400"
                                    class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
                         </div>
                         <div>
                             <label class="block text-sm font-semibold text-gray-700 mb-2">
-                                Height: <span id="heightValue">300</span>px
+                                ${i18next.t('geometry.heightLabel')} <span id="heightValue">300</span>px
                             </label>
                             <input type="range" id="heightSlider" min="150" max="500" value="300"
                                    class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">

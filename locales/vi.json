@@ -1,0 +1,35 @@
+{
+  "common": {
+    "homeTitle": "iOS Swift Learning Hub",
+    "homeSubtitle": "Demo Tương Tác & Kiến Thức Thực Chiến",
+    "madeWith": "Made with ❤️ for iOS Developers | © 2025",
+    "visitorCount": "Lượt ghé thăm:",
+    "home": "Trang chủ"
+  },
+  "index": {
+    "title": "iOS Swift Learning Hub - Demo Tương Tác",
+    "welcome": "Chào mừng đến với Learning Hub",
+    "description": "Tổng hợp các demo tương tác về các vấn đề kỹ thuật iOS/Swift mà tôi gặp phải trong công việc. Học qua hình ảnh và thực hành!",
+    "swiftui": {
+      "title": "SwiftUI",
+      "description": "Các khái niệm và kỹ thuật về SwiftUI",
+      "geometryReader": "GeometryReader Demo"
+    },
+    "concurrency": {
+      "title": "Concurrency & GCD",
+      "description": "Queue, threading và xử lý bất đồng bộ",
+      "queue": "Queue Demo"
+    },
+    "autoLayout": {
+      "title": "Auto Layout",
+      "description": "Priority, constraints và layout dynamics",
+      "priority": "Auto Layout Priority Demo",
+      "realWorld": "Real World Stack Demo"
+    },
+    "comingSoon": {
+      "title": "Coming Soon",
+      "description": "Thêm nhiều chủ đề khác...",
+      "status": "Đang phát triển"
+    }
+  }
+}

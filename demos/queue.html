@@ -3,9 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Queue Demo - iOS Swift Learning Hub</title>
+    <title data-i18n="queue.title">Queue Demo - iOS Swift Learning Hub</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- i18next scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/i18next@23.7.6/dist/umd/i18next.min.js"></script>
     <style>
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
@@ -25,38 +27,77 @@
                         <i data-lucide="book-open" class="text-white w-6 h-6"></i>
                     </div>
                     <div>
-                        <h1 class="text-2xl font-bold text-gray-800">Queue Demo</h1>
-                        <p class="text-sm text-gray-500">GCD & Concurrency</p>
+                        <h1 class="text-2xl font-bold text-gray-800" data-i18n="queue.title">Queue Demo</h1>
+                        <p class="text-sm text-gray-500" data-i18n="queue.subtitle">GCD & Concurrency</p>
                     </div>
                 </div>
-                <a href="../index.html" class="px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition">
-                    <i data-lucide="home" class="inline w-4 h-4 mr-2"></i>
-                    Trang chủ
-                </a>
+                <div class="flex items-center gap-4">
+                    <!-- Language Switcher -->
+                    <div class="flex items-center gap-2">
+                        <button onclick="changeLanguage('vi')" id="lang-vi" class="px-3 py-1 rounded-lg font-medium transition" style="background-color: #a855f7; color: white;">VI</button>
+                        <button onclick="changeLanguage('en')" id="lang-en" class="px-3 py-1 rounded-lg font-medium transition hover:bg-gray-200;" style="color: #6b7280;">EN</button>
+                    </div>
+                    <a href="../index.html" class="px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition">
+                        <i data-lucide="home" class="inline w-4 h-4 mr-2"></i>
+                        <span data-i18n="common.home">Trang chủ</span>
+                    </a>
+                </div>
             </div>
         </div>
     </header>
 
     <main class="container mx-auto px-4 py-8">
         <div class="bg-white rounded-xl shadow-lg p-8 mb-6 fade-in">
-            <h2 class="text-3xl font-bold text-gray-800 mb-2">Serial vs Concurrent Queue Demo</h2>
-            <p class="text-gray-600 mb-6">Visualize cách queue và thread hoạt động trong GCD</p>
+            <h2 class="text-3xl font-bold text-gray-800 mb-2" data-i18n="queue.mainTitle">Serial vs Concurrent Queue Demo</h2>
+            <p class="text-gray-600 mb-6" data-i18n="queue.description">Visualize cách queue và thread hoạt động trong GCD</p>
             <div id="queueContent"></div>
         </div>
     </main>
 
     <footer class="bg-white mt-12 py-6 border-t">
         <div class="container mx-auto px-4 text-center text-gray-600">
-            <p>Made with ❤️ for iOS Developers | © 2025</p>
+            <p data-i18n="common.madeWith">Made with ❤️ for iOS Developers | © 2025</p>
             <div class="mt-3 flex items-center justify-center gap-2 text-sm">
                 <i data-lucide="eye" class="w-4 h-4"></i>
-                <span>Lượt ghé thăm: <strong id="visitor-count">...</strong></span>
+                <span><span data-i18n="common.visitorCount">Lượt ghé thăm:</span> <strong id="visitor-count">...</strong></span>
             </div>
         </div>
     </footer>
 
+    <!-- i18next initialization (inline version) -->
+    <script src="../assets/js/i18n-init-inline.js"></script>
+
     <script>
-        lucide.createIcons();
+        // Set page attribute for title translation
+        document.body.setAttribute('data-page', 'queue');
+
+        // Initialize Lucide icons after i18next is ready
+        window.addEventListener('languageChanged', function() {
+            lucide.createIcons();
+        });
+
+        // Language switcher styling
+        function updateLanguageSwitcherUI() {
+            const viBtn = document.getElementById('lang-vi');
+            const enBtn = document.getElementById('lang-en');
+            const currentLang = i18next.language || localStorage.getItem('i18nextLng') || 'vi';
+
+            viBtn.style.backgroundColor = '#d1d5db';
+            viBtn.style.color = '#374151';
+            enBtn.style.backgroundColor = 'transparent';
+            enBtn.style.color = '#6b7280';
+
+            if (currentLang === 'vi') {
+                viBtn.style.backgroundColor = '#a855f7';
+                viBtn.style.color = 'white';
+            } else if (currentLang === 'en') {
+                enBtn.style.backgroundColor = '#e5e7eb';
+                enBtn.style.color = '#374151';
+            }
+        }
+
+        window.addEventListener('languageChanged', updateLanguageSwitcherUI);
+        setTimeout(updateLanguageSwitcherUI, 500);
 
         // Visitor counter using CountAPI
         const counterNamespace = 'ios-learning-hub';
@@ -65,7 +106,9 @@
         fetch(`https://api.countapi.xyz/hit/${counterNamespace}/${counterKey}`)
             .then(response => response.json())
             .then(data => {
-                document.getElementById('visitor-count').textContent = data.value.toLocaleString('vi-VN');
+                const currentLang = i18next.language || 'vi';
+                const locale = currentLang === 'en' ? 'en-US' : 'vi-VN';
+                document.getElementById('visitor-count').textContent = data.value.toLocaleString(locale);
             })
             .catch(error => {
                 console.error('Error fetching visitor count:', error);
@@ -80,17 +123,17 @@
                     <!-- Queue Type Selection -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">Queue Type:</label>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">${i18next.t('queue.labels.queueType')}</label>
                             <select id="queueType" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
-                                <option value="serial">Serial Queue</option>
-                                <option value="concurrent">Concurrent Queue</option>
+                                <option value="serial">${i18next.t('queue.options.serialQueue')}</option>
+                                <option value="concurrent">${i18next.t('queue.options.concurrentQueue')}</option>
                             </select>
                         </div>
                         <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">Call Type:</label>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">${i18next.t('queue.labels.callType')}</label>
                             <select id="callType" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
-                                <option value="async">Async</option>
-                                <option value="sync">Sync</option>
+                                <option value="async">${i18next.t('queue.options.async')}</option>
+                                <option value="sync">${i18next.t('queue.options.sync')}</option>
                             </select>
                         </div>
                     </div>
@@ -102,13 +145,13 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/>
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                             </svg>
-                            Chạy Demo
+                            ${i18next.t('queue.buttons.run')}
                         </button>
                         <button id="resetBtn" class="px-6 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition flex items-center">
                             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
                             </svg>
-                            Reset
+                            ${i18next.t('queue.buttons.reset')}
                         </button>
                     </div>
 
@@ -119,10 +162,10 @@
                             <div>
                                 <h3 class="font-bold text-gray-800 mb-3 flex items-center">
                                     <span class="w-3 h-3 bg-blue-500 rounded-full mr-2"></span>
-                                    Main Thread
+                                    ${i18next.t('queue.labels.mainThread')}
                                 </h3>
                                 <div id="mainThread" class="bg-white border-2 border-blue-300 rounded-lg p-4 min-h-[100px]">
-                                    <div class="text-center text-gray-400 py-8">Nhấn "Chạy Demo"</div>
+                                    <div class="text-center text-gray-400 py-8">${i18next.t('queue.placeholders.pressRun')}</div>
                                 </div>
                             </div>
 
@@ -130,10 +173,10 @@
                             <div>
                                 <h3 class="font-bold text-gray-800 mb-3 flex items-center">
                                     <span class="w-3 h-3 bg-purple-500 rounded-full mr-2"></span>
-                                    <span id="queueLabel">Serial Queue</span>
+                                    <span id="queueLabel">${i18next.t('queue.labels.serialQueue')}</span>
                                 </h3>
                                 <div id="queueThread" class="bg-white border-2 border-purple-300 rounded-lg p-4 min-h-[100px]">
-                                    <div class="text-center text-gray-400 py-8">Nhấn "Chạy Demo"</div>
+                                    <div class="text-center text-gray-400 py-8">${i18next.t('queue.placeholders.pressRun')}</div>
                                 </div>
                             </div>
                         </div>
@@ -141,9 +184,9 @@
 
                     <!-- Execution Log -->
                     <div>
-                        <h3 class="font-bold text-gray-800 mb-3">Execution Log:</h3>
+                        <h3 class="font-bold text-gray-800 mb-3">${i18next.t('queue.labels.executionLog')}</h3>
                         <div id="executionLog" class="bg-gray-900 text-gray-100 p-4 rounded-lg min-h-[150px] font-mono text-sm overflow-y-auto max-h-[300px]">
-                            <div class="text-gray-500">// Log sẽ hiển thị ở đây...</div>
+                            <div class="text-gray-500">${i18next.t('queue.placeholders.logWillAppear')}</div>
                         </div>
                     </div>
 
@@ -162,8 +205,8 @@ queue.async {
 
                     <!-- Explanation -->
                     <div id="queueExplanation" class="bg-purple-50 border-l-4 border-purple-500 p-4">
-                        <p class="text-gray-700 font-semibold mb-2">💡 Async trên Serial Queue:</p>
-                        <p class="text-gray-600">Main thread không bị block, tiếp tục chạy ngay. Tasks trong queue chạy tuần tự theo thứ tự.</p>
+                        <p class="text-gray-700 font-semibold mb-2">${i18next.t('queue.explanations.serialAsync')}</p>
+                        <p class="text-gray-600">${i18next.t('queue.explanations.serialAsyncText')}</p>
                     </div>
                 </div>
             `;
@@ -183,9 +226,9 @@ queue.async {
             function updateQueueDemo() {
                 const isSerial = queueType.value === 'serial';
                 const isAsync = callType.value === 'async';
-                
-                queueLabel.textContent = isSerial ? 'Serial Queue' : 'Concurrent Queue';
-                
+
+                queueLabel.textContent = isSerial ? i18next.t('queue.labels.serialQueue') : i18next.t('queue.labels.concurrentQueue');
+
                 const codeBlock = document.getElementById('queueCode');
                 const explanation = document.getElementById('queueExplanation');
 
@@ -208,17 +251,17 @@ queue.${callType.value} {
                 let explainText = '';
 
                 if (isSerial && isAsync) {
-                    explainTitle = '💡 Async trên Serial Queue:';
-                    explainText = 'Main thread không bị block, tiếp tục chạy ngay. Tasks trong queue chạy tuần tự, Task B đợi Task A xong.';
+                    explainTitle = i18next.t('queue.explanations.serialAsync');
+                    explainText = i18next.t('queue.explanations.serialAsyncText');
                 } else if (isSerial && !isAsync) {
-                    explainTitle = '⏸️ Sync trên Serial Queue:';
-                    explainText = 'Main thread BỊ BLOCK cho đến khi task hoàn thành. Tasks vẫn chạy tuần tự.';
+                    explainTitle = i18next.t('queue.explanations.serialSync');
+                    explainText = i18next.t('queue.explanations.serialSyncText');
                 } else if (!isSerial && isAsync) {
-                    explainTitle = '⚡ Async trên Concurrent Queue:';
-                    explainText = 'Main thread không bị block. Nhiều tasks có thể chạy SONG SONG, thứ tự hoàn thành không đảm bảo.';
+                    explainTitle = i18next.t('queue.explanations.concurrentAsync');
+                    explainText = i18next.t('queue.explanations.concurrentAsyncText');
                 } else {
-                    explainTitle = '⏸️ Sync trên Concurrent Queue:';
-                    explainText = 'Main thread BỊ BLOCK. Tasks có thể chạy song song nhưng caller phải đợi task đầu tiên hoàn thành.';
+                    explainTitle = i18next.t('queue.explanations.concurrentSync');
+                    explainText = i18next.t('queue.explanations.concurrentSyncText');
                 }
 
                 explanation.innerHTML = `
@@ -249,83 +292,90 @@ queue.${callType.value} {
 
                 // Animation sequence
                 setTimeout(() => {
-                    mainThread.innerHTML = '<div class="animate-pulse"><div class="w-full h-4 bg-blue-400 rounded mb-2"></div><div class="text-sm text-blue-700">Running...</div></div>';
-                    addLog('▶️ Main thread starts', 'text-blue-400');
+                    mainThread.innerHTML = `<div class="animate-pulse"><div class="w-full h-4 bg-blue-400 rounded mb-2"></div><div class="text-sm text-blue-700">${i18next.t('queue.logs.running')}</div></div>`;
+                    addLog(i18next.t('queue.logs.mainThreadStarts'), 'text-blue-400');
                 }, 100);
 
                 setTimeout(() => {
-                    addLog(`📤 Call queue.${callType.value} { Task A }`, 'text-purple-400');
-                    queueThread.innerHTML = '<div class="space-y-2"><div class="p-2 bg-purple-100 border border-purple-300 rounded">Task A - Queued</div></div>';
-                    
+                    const logKey = isSync ? 'queue.logs.callQueueSync' : 'queue.logs.callQueueAsync';
+                    addLog(`${i18next.t(logKey)} A }`, 'text-purple-400');
+                    queueThread.innerHTML = `<div class="space-y-2"><div class="p-2 bg-purple-100 border border-purple-300 rounded">${i18next.t('queue.logs.taskQueued')}</div></div>`;
+
                     if (isSync) {
-                        mainThread.innerHTML = '<div class=""><div class="w-full h-4 bg-red-400 rounded mb-2"></div><div class="text-sm text-red-700">⏸️ BLOCKED</div></div>';
-                        addLog('⏸️ Main thread BLOCKED - waiting...', 'text-red-400');
+                        mainThread.innerHTML = `<div class=""><div class="w-full h-4 bg-red-400 rounded mb-2"></div><div class="text-sm text-red-700">${i18next.t('queue.logs.blocked')}</div></div>`;
+                        addLog(i18next.t('queue.logs.mainThreadBlocked'), 'text-red-400');
                     }
                 }, 800);
 
                 setTimeout(() => {
                     if (!isSync) {
-                        mainThread.innerHTML = '<div class="animate-pulse"><div class="w-full h-4 bg-blue-400 rounded mb-2"></div><div class="text-sm text-blue-700">Continues...</div></div>';
-                        addLog('▶️ Main thread continues (not blocked)', 'text-green-400');
+                        mainThread.innerHTML = `<div class="animate-pulse"><div class="w-full h-4 bg-blue-400 rounded mb-2"></div><div class="text-sm text-blue-700">${i18next.t('queue.logs.continues')}</div></div>`;
+                        addLog(i18next.t('queue.logs.mainThreadContinues'), 'text-green-400');
                     }
                 }, 1200);
 
                 setTimeout(() => {
-                    addLog(`📤 Call queue.${callType.value} { Task B }`, 'text-purple-400');
-                    queueThread.innerHTML = '<div class="space-y-2"><div class="p-2 bg-purple-100 border border-purple-300 rounded">Task A - Queued</div><div class="p-2 bg-gray-100 border border-gray-300 rounded">Task B - Queued</div></div>';
+                    const logKey = isSync ? 'queue.logs.callQueueSync' : 'queue.logs.callQueueAsync';
+                    addLog(`${i18next.t(logKey)} B }`, 'text-purple-400');
+                    queueThread.innerHTML = `<div class="space-y-2"><div class="p-2 bg-purple-100 border border-purple-300 rounded">${i18next.t('queue.logs.taskQueued')}</div><div class="p-2 bg-gray-100 border border-gray-300 rounded">${i18next.t('queue.logs.taskBQueued')}</div></div>`;
                 }, 1800);
 
                 setTimeout(() => {
-                    queueThread.innerHTML = '<div class="space-y-2"><div class="p-2 bg-green-100 border-2 border-green-500 rounded animate-pulse"><strong>Task A - Running</strong></div><div class="p-2 bg-gray-100 border border-gray-300 rounded">Task B - Waiting</div></div>';
-                    addLog('🏃 Task A starts executing', 'text-green-400');
+                    queueThread.innerHTML = `<div class="space-y-2"><div class="p-2 bg-green-100 border-2 border-green-500 rounded animate-pulse"><strong>${i18next.t('queue.logs.taskRunning')}</strong></div><div class="p-2 bg-gray-100 border border-gray-300 rounded">${i18next.t('queue.logs.taskBWaiting')}</div></div>`;
+                    addLog(i18next.t('queue.logs.taskStarts'), 'text-green-400');
                 }, 2400);
 
                 if (!isSerial) {
                     setTimeout(() => {
-                        queueThread.innerHTML = '<div class="space-y-2"><div class="p-2 bg-green-100 border-2 border-green-500 rounded animate-pulse"><strong>Task A - Running</strong></div><div class="p-2 bg-green-100 border-2 border-green-500 rounded animate-pulse"><strong>Task B - Running</strong></div></div>';
-                        addLog('🏃 Task B starts (concurrent!)', 'text-green-400');
+                        queueThread.innerHTML = `<div class="space-y-2"><div class="p-2 bg-green-100 border-2 border-green-500 rounded animate-pulse"><strong>${i18next.t('queue.logs.taskRunning')}</strong></div><div class="p-2 bg-green-100 border-2 border-green-500 rounded animate-pulse"><strong>${i18next.t('queue.logs.taskBRunning')}</strong></div></div>`;
+                        addLog(i18next.t('queue.logs.taskBStartsConcurrent'), 'text-green-400');
                     }, 3000);
                 }
 
                 setTimeout(() => {
                     if (isSerial) {
-                        queueThread.innerHTML = '<div class="space-y-2"><div class="p-2 bg-blue-100 border border-blue-300 rounded">✅ Task A - Done</div><div class="p-2 bg-green-100 border-2 border-green-500 rounded animate-pulse"><strong>Task B - Running</strong></div></div>';
-                        addLog('✅ Task A completed', 'text-blue-400');
-                        addLog('🏃 Task B starts', 'text-green-400');
+                        queueThread.innerHTML = `<div class="space-y-2"><div class="p-2 bg-blue-100 border border-blue-300 rounded">${i18next.t('queue.logs.taskDone')}</div><div class="p-2 bg-green-100 border-2 border-green-500 rounded animate-pulse"><strong>${i18next.t('queue.logs.taskBRunning')}</strong></div></div>`;
+                        addLog(i18next.t('queue.logs.taskACompleted'), 'text-blue-400');
+                        addLog(i18next.t('queue.logs.taskBStarts'), 'text-green-400');
                     } else {
-                        queueThread.innerHTML = '<div class="space-y-2"><div class="p-2 bg-blue-100 border border-blue-300 rounded">✅ Task A - Done</div><div class="p-2 bg-green-100 border-2 border-green-500 rounded animate-pulse"><strong>Task B - Still Running</strong></div></div>';
-                        addLog('✅ Task A completed', 'text-blue-400');
+                        queueThread.innerHTML = `<div class="space-y-2"><div class="p-2 bg-blue-100 border border-blue-300 rounded">${i18next.t('queue.logs.taskDone')}</div><div class="p-2 bg-green-100 border-2 border-green-500 rounded animate-pulse"><strong>${i18next.t('queue.logs.taskBStillRunning')}</strong></div></div>`;
+                        addLog(i18next.t('queue.logs.taskACompleted'), 'text-blue-400');
                     }
-                    
+
                     if (isSync) {
-                        mainThread.innerHTML = '<div class="animate-pulse"><div class="w-full h-4 bg-blue-400 rounded mb-2"></div><div class="text-sm text-blue-700">Resumed!</div></div>';
-                        addLog('▶️ Main thread resumes', 'text-green-400');
+                        mainThread.innerHTML = `<div class="animate-pulse"><div class="w-full h-4 bg-blue-400 rounded mb-2"></div><div class="text-sm text-blue-700">${i18next.t('queue.logs.resumed')}</div></div>`;
+                        addLog(i18next.t('queue.logs.mainThreadResumes'), 'text-green-400');
                     }
                 }, 4000);
 
                 setTimeout(() => {
-                    queueThread.innerHTML = '<div class="space-y-2"><div class="p-2 bg-blue-100 border border-blue-300 rounded">✅ Task A - Done</div><div class="p-2 bg-blue-100 border border-blue-300 rounded">✅ Task B - Done</div></div>';
-                    addLog('✅ Task B completed', 'text-blue-400');
-                    addLog('🎉 All tasks finished!', 'text-yellow-400');
-                    
-                    mainThread.innerHTML = '<div class="text-center text-green-600 py-8">✅ Completed</div>';
-                    
+                    queueThread.innerHTML = `<div class="space-y-2"><div class="p-2 bg-blue-100 border border-blue-300 rounded">${i18next.t('queue.logs.taskDone')}</div><div class="p-2 bg-blue-100 border border-blue-300 rounded">${i18next.t('queue.logs.taskBDone')}</div></div>`;
+                    addLog(i18next.t('queue.logs.taskBCompleted'), 'text-blue-400');
+                    addLog(i18next.t('queue.logs.allFinished'), 'text-yellow-400');
+
+                    mainThread.innerHTML = `<div class="text-center text-green-600 py-8">${i18next.t('queue.logs.completed')}</div>`;
+
                     runBtn.disabled = false;
                     runBtn.classList.remove('opacity-50');
                 }, 5000);
             }
 
             function resetQueueDemo() {
-                document.getElementById('mainThread').innerHTML = '<div class="text-center text-gray-400 py-8">Nhấn "Chạy Demo"</div>';
-                document.getElementById('queueThread').innerHTML = '<div class="text-center text-gray-400 py-8">Nhấn "Chạy Demo"</div>';
-                document.getElementById('executionLog').innerHTML = '<div class="text-gray-500">// Log sẽ hiển thị ở đây...</div>';
+                document.getElementById('mainThread').innerHTML = `<div class="text-center text-gray-400 py-8">${i18next.t('queue.placeholders.pressRun')}</div>`;
+                document.getElementById('queueThread').innerHTML = `<div class="text-center text-gray-400 py-8">${i18next.t('queue.placeholders.pressRun')}</div>`;
+                document.getElementById('executionLog').innerHTML = `<div class="text-gray-500">${i18next.t('queue.placeholders.logWillAppear')}</div>`;
                 runBtn.disabled = false;
                 runBtn.classList.remove('opacity-50');
             }
 
             updateQueueDemo();
         }
-        
+
+        // Reload demo content when language changes
+        window.addEventListener('languageChanged', function() {
+            loadQueueDemo();
+        });
+
         // Initialize on page load
         loadQueueDemo();
     </script>
